@@ -4,7 +4,7 @@ set -e
 
 usage() {
     cat<<EOF
-Usage: ec2-ssh [-k KEY] [-s SECRET] [-r REGION] [-t TAG] <instance-name>
+Usage: ec2-ssh [-k KEY] [-s SECRET] [-r REGION] [-t TAG] [-a ADD] <instance-name>
 
 Open an ssh connection to an EC2 instance where <instance-name>=tag:value.
 The 'tag:' portion of <instance-name> is optional, and defaults to 'Name'.
@@ -15,21 +15,30 @@ For a list of instances, run ec2-host without any paramteres
   -s, SECRET    Amazon EC2 Secret, defaults to \$AWS_SECRET_ACCESS_KEY
   -r, REGION    Amazon EC2 Region, defaults to us-east-1
   -t, TAG       Tag name for searching, defaults to 'Name'
+  -a, ADD       Adds ssh public keys to specified server via fourth parameter(eg. content of ~/.ssh/id_rsa.pub)
 EOF
 }
 
 # Print usage message and exit if no arguments are given
 test $# -eq 0 && { usage; exit; }
 
+add() {
+  echo "kera kha"
+echo $2
+ec2-ssh $2 'uptime'
+  echo "kera kha"
+}
+
 # Process options
 cmd="ec2-host"
-while getopts ":hk:s:r:t:" opt; do
+while getopts ":hk:s:r:t:a" opt; do
     case $opt in
         h  ) usage; exit 1;;
         k  ) cmd="$cmd -k $OPTARG";;
         s  ) cmd="$cmd -s $OPTARG";;
         r  ) cmd="$cmd -r $OPTARG";;
         t  ) cmd="$cmd -t $OPTARG";;
+        a  ) echo $3 | ec2-ssh $2 'cat >> .ssh/authorized_keys' 2> /dev/null;exit 0;;
         \? ) usage; exit 1
     esac
 done
@@ -64,7 +73,6 @@ host=$(eval "$cmd $inst")
 # pass all other parameters (${@:2}) to ssh allowing
 # things like: ec2-ssh nginx uptime
 cmd="echo \\\". ~/.bashrc 
-#I don't want to sacrifice my beautiful PS1 at server
 #&& PS1='\[\e]0;$inst: \w\\\a\]\[\\\033[01;32m\]$inst\[\\\033[00m\]:\[\\\033[01;34m\]\w\[\\\033[00m\]\\\$ '\\\" > ~/.ec2sshrc; /bin/bash --rcfile .ec2sshrc -i"
 if test "${@:2}"; then
     cmd="${@:2}"
