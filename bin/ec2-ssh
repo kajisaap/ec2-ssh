@@ -16,6 +16,7 @@ For a list of instances, run ec2-host without any paramteres
   -r, REGION    Amazon EC2 Region, defaults to us-east-1
   -t, TAG       Tag name for searching, defaults to 'Name'
   -a, ADD       Adds ssh public keys to specified server via fourth parameter(eg. content of ~/.ssh/id_rsa.pub)
+  -l, LIST      List all active ec2 instances
 EOF
 }
 
@@ -31,7 +32,7 @@ ec2-ssh $2 'uptime'
 
 # Process options
 cmd="ec2-host"
-while getopts ":hk:s:r:t:a" opt; do
+while getopts ":hk:s:r:t:a:l" opt; do
     case $opt in
         h  ) usage; exit 1;;
         k  ) cmd="$cmd -k $OPTARG";;
@@ -39,6 +40,7 @@ while getopts ":hk:s:r:t:a" opt; do
         r  ) cmd="$cmd -r $OPTARG";;
         t  ) cmd="$cmd -t $OPTARG";;
         a  ) echo $3 | ec2-ssh $2 'cat >> .ssh/authorized_keys' 2> /dev/null;exit 0;;
+        l  ) ec2-host | column -t; exit 0;;
         \? ) usage; exit 1
     esac
 done

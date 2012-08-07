@@ -1,2 +1,24 @@
 INSTALL
-sudo python setup.py install
+1. sudo python setup.py install
+It will provide ec2-ssh script that will make ssh'ing to EC2 instance more sane
+
+
+::
+
+% ec2-ssh app1
+# where app1 is the instance name of ec2 instance visible in AWS dashboard
+# equivalent to
+# ssh ubuntu@ec2-123-45-67-89.compute-1.amazonaws.com where ec2-123-45-67-89.compute-1.amazonaws.com is the public URL to app1 name in corresponding AWS account.
+
+% ec2-ssh root@appserver
+% ec2-ssh deploy@nginx2 sudo restart nginx
+
+% ec2-ssh -l 
+will list out all the active ec2 instances
+
+% ec2-ssh -a site1 "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAqVeNqpSJEhGrFvJeZdLyOXVAFORF0jj3/voX5wZ6rCXHXOXWVDcbVDryH5h6iGAfAeGfs11oTkh9i7L4KQC+mx8nInQy92LwTDMV8bdU1LGl6nCYOez8r0V+YlsSPem23byQga6IKCGUk/DwVpjFUESY86JCA7hMHsiSmCYsai8ovr8euFbZ8ZbHACfC3RtzDN8nx1p3Tuk2Ka0aEMKyAzQVRs9fW48sJ5zGJexY1nmZt5dXF1vb4u8qCHh7Z7+iLPo5sX4Td813XgAZ1FOMajyShgf5HBf8T4IUNbrN5Uf3pLTeVDLIDwqFpDQ2lSaurZ4umVLd11OALQ1TssbwwQ== sts-110@sts-110s-iMac.local"
+
+will add the specified ssh keys(don't forget the quotes) directly to ec2 instance identified by site1 handle provided the user initiating the command is already in the authorized-keys of the site1 machine
+
+
+
