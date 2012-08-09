@@ -42,7 +42,7 @@ def ec2_active_instances(label_tag, filters):
             instance_name = instance.tags.get(label_tag)
             instance_role = instance.tags.get("role")
             if instance.public_dns_name:
-                pair = (instance_name, instance_role, instance.public_dns_name,instance.private_ip_address)
+                pair = (instance_name, instance.public_dns_name,instance.private_ip_address,instance_role)
                 instances.append(pair)
     return instances
 
@@ -110,7 +110,7 @@ def main(argv):
     numinstances = len(instances)
 
     if numinstances == 1:
-        print instances[0][1][2][3]  # [1] = dns
+        print instances[0][1]  # [1] = dns
 
         sys.exit(0)
         return
