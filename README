@@ -1,9 +1,11 @@
 INSTALL
+
 1. sudo python setup.py install
-It will provide ec2-ssh script that will make ssh'ing to EC2 instance more sane
+It will provide ec2-ssh script that will make ssh'ing to EC2 instance more sane.
+Be sure to export AWS vars into your shell rc file(eg. .bashrc) 
 
-
-::
+export AWS_SECRET_KEY=yourkey
+export AWS_SECRET_ACCESS_KEY=your_access_key
 
 % ec2-ssh app1
 # where app1 is the instance name of ec2 instance visible in AWS dashboard
